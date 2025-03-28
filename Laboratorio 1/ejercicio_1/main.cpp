@@ -2,18 +2,23 @@
 
 using namespace std;
 
-int main()
-{
-    int a, b, residuo;
-    cout << "Ingrese el valor de a: ";
-    cin >> a;
-
-    cout << "Ingrese el valor de b: ";
-    cin >> b;
 
 
-    residuo = a % b;
-    cout << "El residuo de la division " << a << "/" << b << " es: " << residuo << "\n";;
+    int main() {
+        int n1, n2, residuo=0;
 
-    return 0;
-}
+
+        cout << "Ingrese el valor de numero 1: ";
+        cin >> n1;
+
+        cout << "Ingrese el valor de numero 2: ";
+        cin >> n2;
+
+
+        residuo = n1 % n2;
+
+
+        cout << "El residuo de la division " << n1<< "/" << n2 << " es: " << residuo << "\n";;
+
+        return 0;
+    }
