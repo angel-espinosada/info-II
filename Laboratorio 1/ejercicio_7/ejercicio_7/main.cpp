@@ -13,6 +13,6 @@ int main()
 //cout<<"Numero"<<temp<<endl;
 
     }
-    cout<<"La suma de los numeros del 0 al "<<n<<" es: "<<temp<<endl;
+    cout<<"La sumatoria de los numeros del 0 al "<<n<<" es: "<<temp<<endl;
     return 0;
 }
