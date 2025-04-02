@@ -9,9 +9,13 @@ int main()
 
     cout << "Ingrese un letra" << endl;
     cin>>a;
-    for (int i=0;i<=26;i++){
-        if (vocales[i]=a){
-            cout <<"es vocal"<<endl;
+    for (int i=0;i<=25;i++){
+        if (vocales[i]==a){
+        cout <<"es vocal"<<a<<vocales[i]<<i<<endl;
+        }
+
+        else{
+            cout <<"no es vocal"<<endl;
         }
 }
     return 0;
