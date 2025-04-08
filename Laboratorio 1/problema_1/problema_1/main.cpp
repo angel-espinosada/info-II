@@ -3,7 +3,8 @@
 using namespace std;
 
 int main()
-{ char a;
+{   bool conso =false;
+    char a;
     char vocales[5]={'a','e','i','o','u'};
     char consonantes[]={'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
 
@@ -11,12 +12,17 @@ int main()
     cin>>a;
     for (int i=0;i<=25;i++){
         if (vocales[i]==a){
-        cout <<"es vocal"<<a<<vocales[i]<<i<<endl;
+            conso=true;
+        //cout <<"es vocal"<<a<<vocales[i]<<i<<endl;
         }
 
-        else{
-            cout <<"no es vocal"<<endl;
-        }
+
 }
+    if(  conso=true){
+cout <<"Es cpnso"<<endl;
+    }
+    if (  conso=false){
+        cout<<"es vocal"<<endl;
+    }
     return 0;
 }
