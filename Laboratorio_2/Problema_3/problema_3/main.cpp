@@ -12,7 +12,7 @@ int main()
     cout<<"Ingrese la primera cadena: "<<endl;
     cin.getline(cadena1,100);
     cout<<"Ingrese la segunda  cadena: "<<endl;
-    cin.getline(cadena2,100);
+    cin.getline(cadena2,1000);
 
     tamano1=strlen(cadena1);
     tamano2=strlen(cadena2);
@@ -35,7 +35,7 @@ int main()
 
         }
         else{
-            cout<<"Las cadenas tiene el mismo tamaño, pero no son iguales"<<endl;
+            cout<<"Las cadenas tiene el mismo tamano, pero no son iguales"<<endl;
         }
     return 0;
     }}
