@@ -42,6 +42,33 @@ unsigned char* loadPixels(QString input, int &width, int &height);
 bool exportImage(unsigned char* pixelData, int width,int height, QString archivoSalida);
 unsigned int* loadSeedMasking(const char* nombreArchivo, int &seed, int &n_pixels);
 
+
+//XOR entre dos bytes
+unsigned char xorByte(unsigned char a, unsigned char b) {
+    return a ^ b;
+}
+
+//  Rotar bits a la derecha
+unsigned char rotarDerecha(unsigned char valor, int bits) {
+    return (valor >> bits) | (valor << (8 - bits));
+}
+
+//  Rotar bits a la izquierda
+unsigned char rotarIzquierda(unsigned char valor, int bits) {
+    return (valor << bits) | (valor >> (8 - bits));
+}
+
+// Desplazar a la derecha (rellena con ceros)
+unsigned char desplazarDerecha(unsigned char valor, int bits) {
+    return valor >> bits;
+}
+
+// Desplazar a la izquierda (rellena con ceros)
+unsigned char desplazarIzquierda(unsigned char valor, int bits) {
+    return valor << bits;
+}
+
+
 int main()
 {
     // Definición de rutas de archivo de entrada (imagen original) y salida (imagen modificada)
