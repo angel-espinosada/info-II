@@ -28,16 +28,16 @@ int main(int argc, char *argv[])
         for (int x = 0; x < ancho; ++x) {
             QColor color = imagen.pixelColor(x, y);
 
-            int r = 0; // Eliminamos el rojo
-            int g = color.green();
-            int b = color.blue();
+            int r = color.red();; // Eliminamos el rojo
+            int g = 0;
+            int b = 0;
 
             imagen.setPixelColor(x, y, QColor(r, g, b));
         }
     }
 
     // ✅ Guardar la nueva imagen
-    QString rutaGuardado = "G:/Mi unidad/UdeA/imagen_sin_rojo.bmp";
+    QString rutaGuardado = "G:/Mi unidad/UdeA/imagen_si_azul.bmp";
     bool exito = imagen.save(rutaGuardado);
 
     if (exito) {
