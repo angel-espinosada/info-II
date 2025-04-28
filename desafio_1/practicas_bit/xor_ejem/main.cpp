@@ -1,7 +1,7 @@
 #include <QCoreApplication>
 #include <QImage>
 #include <iostream>
-
+//Obteniendo el P1.BMP
 using namespace std;
 
 int main(int argc, char *argv[]) {
