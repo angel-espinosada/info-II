@@ -82,13 +82,65 @@ void leerachivo(string &datos){
         cout << "Total de ceros: " << ceros << endl;
 
     }
-    void DividirBloques(const string& binario, int& nbloques){
-        int n = 8;
+    void DividirBloques(const string& binario, int& nbloques) {
+        int n = 4;
         nbloques = 0;
+        string bloqueAnterior = ""; // el anterior SIN codificar
+        string binarioCodificado = "";
 
         for (int i = 0; i < binario.length(); i += n) {
-            string bloque = binario.substr(i, n);
-            cout << "Bloque: " << bloque << endl;
+            string bloque = binario.substr(i, n);         // bloque actual
+            string bloqueOriginal = bloque;               // guardar copia original
+            string bloqueCodificado = "";
+
+            if (i == 0) {
+                // Primer bloque: invertir todos los bits
+                for (char bit : bloque) {
+                    bloqueCodificado += (bit == '0') ? '1' : '0';
+                }
+                cout << "Primer bloque codificado: " << bloqueCodificado << endl;
+            } else {
+                // Contar unos y ceros del bloqueAnterior original
+                int unos = 0, ceros = 0;
+                ContarBits(bloqueAnterior, unos, ceros);
+
+                if (unos == ceros) {
+                    // Invertir todos los bits
+                    for (char bit : bloque) {
+                        bloqueCodificado += (bit == '0') ? '1' : '0';
+                    }
+                } else if (ceros > unos) {
+                    // Invertir cada 2 bits
+                    for (int j = 0; j < bloque.length(); j += 2) {
+                        if (j + 1 < bloque.length()) {
+                            bloqueCodificado += bloque[j + 1];
+                            bloqueCodificado += bloque[j];
+                        } else {
+                            bloqueCodificado += bloque[j];
+                        }
+                    }
+                } else {
+                    // Invertir cada 3 bits
+                    for (int j = 0; j < bloque.length(); j += 3) {
+                        if (j + 2 < bloque.length()) {
+                            bloqueCodificado += bloque[j + 2];
+                            bloqueCodificado += bloque[j + 1];
+                            bloqueCodificado += bloque[j];
+                        } else {
+                            for (int k = j; k < bloque.length(); ++k) {
+                                bloqueCodificado += bloque[k];
+                            }
+                        }
+                    }
+                }
+
+                cout << "Bloque " << nbloques << " codificado: " << bloqueCodificado << endl;
+            }
+
+            binarioCodificado += bloqueCodificado;
+            bloqueAnterior = bloqueOriginal; // muy importante: guardar el original, no el codificado
             nbloques++;
         }
+
+        cout << "Cadena binaria codificada completa: " << binarioCodificado << endl;
     }
