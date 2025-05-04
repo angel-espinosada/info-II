@@ -11,12 +11,22 @@ using namespace std;
 void leerachivo(string& datos);
 string ConvertiraBin(const string NombreArchivo);
 void MonstrarContenido(const string& NombreArchivo);
+void ContarBits(const string& binario, int& unos, int& ceros );
+void DividirBloques(const string& binario, int& nbloques);
 
 int main()
 {
     string texto = "ejemplo.txt";
     leerachivo(texto);
     MonstrarContenido(texto);
+    ConvertiraBin(texto);
+    int unos, ceros;
+    string bin = ConvertiraBin(texto);
+    ContarBits(bin,unos,ceros);
+
+    int cantidadBloques;
+
+    DividirBloques(bin,cantidadBloques);
 
     return 0;
 
@@ -40,7 +50,7 @@ void leerachivo(string &datos){
             binario+=bitset<8>(c).to_string();
 
         }
-
+        cout<<binario<<endl;
         return binario;
 
     }
@@ -60,4 +70,25 @@ void leerachivo(string &datos){
         }
 
         archivo.close();
+    }
+    void ContarBits(const string& binario, int& unos, int& ceros ){
+        unos=ceros=0;
+        for (char bit:binario) {
+            if(bit=='1') unos++;
+            else if(bit=='0')ceros++;
+
+        }
+        cout << "Total de unos: " << unos << endl;
+        cout << "Total de ceros: " << ceros << endl;
+
+    }
+    void DividirBloques(const string& binario, int& nbloques){
+        int n = 8;
+        nbloques = 0;
+
+        for (int i = 0; i < binario.length(); i += n) {
+            string bloque = binario.substr(i, n);
+            cout << "Bloque: " << bloque << endl;
+            nbloques++;
+        }
     }
