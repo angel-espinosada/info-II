@@ -17,7 +17,8 @@ void DividirBloques(const string& binario, int& nbloques);
 string InvertirTodos(const string& bloque);
 string InvertirPorPares(const string& bloque);
 string InvertirPorTernas(const string& bloque);
-
+string binarioATexto(const string& binario);
+void guardarComoTexto(const string& nombreArchivo, const string& binario);
 //Funcion segundo metodo
 
 void codificarPorDesplazamiento(const string& binario, int n);
@@ -31,6 +32,8 @@ void DecodificarMetodo1(const string& binarioCodificado, int n);
 //Funcion para leer el binario
 string leerBinarioDesdeArchivo(const string& nombreArchivo);
 
+// decodificar segundo metdo
+void DecodificarMetodo2(const string& binarioCodificado, int tamBloque);
 
 int main()
 {
@@ -63,8 +66,10 @@ int main()
 
     //leer binario
 
-    string binarioCodificado = leerBinarioDesdeArchivo("salida1.bin");
-    DecodificarMetodo1(binarioCodificado, 4);  // o el n original
+    string binarioCodificado = leerBinarioDesdeArchivo("salida.bin");
+
+    //DecodificarMetodo1(binarioCodificado, 4);  // o el n original
+    DecodificarMetodo2(binarioCodificado, 4);
     return 0;
 
 }
@@ -252,46 +257,36 @@ void leerachivo(string &datos){
 
 
     string desInvertirPorPares(const string& bloque) {
-        string invertido = "";
-
-        // Paso 1: invertir bits
-        for (char bit : bloque) {
-            invertido += (bit == '0') ? '1' : '0';
+        string resultado = "";
+        for (int i = 0; i < bloque.length(); ++i) {
+            if (i % 2 == 1)  // si es el segundo bit del par
+                resultado += (bloque[i] == '0') ? '1' : '0';
+            else
+                resultado += bloque[i];  // dejar el primero igual
         }
-
-        // Paso 2: restaurar el orden de pares
-        for (int i = 0; i + 1 < invertido.length(); i += 2) {
-            swap(invertido[i], invertido[i + 1]);
-        }
-
-        return invertido;
+        return resultado;
     }
 
 
 
     string desInvertirPorTernas(const string& bloque) {
-        string invertido = "";
-
-        // 1. Invertimos los bits
-        for (char bit : bloque) {
-            invertido += (bit == '0') ? '1' : '0';
+        string resultado = "";
+        for (int i = 0; i < bloque.length(); ++i) {
+            // Invertimos solo el tercer bit de cada grupo de 3
+            if ((i + 1) % 3 == 0)
+                resultado += (bloque[i] == '0') ? '1' : '0';
+            else
+                resultado += bloque[i];
         }
-
-        string resultado = invertido;
-        int len = resultado.length();
-
-        // 2. Revertimos el orden de las ternas
-        for (int i = 0; i + 2 < len; i += 3) {
-            swap(resultado[i], resultado[i + 2]);
-        }
-
         return resultado;
     }
 
 
+
+
     void DecodificarMetodo1(const string& binarioCodificado, int n) {
         string resultado = "";
-        string bloqueAnterior = "";  // Se usará el bloque ya decodificado
+        string bloqueAnterior = "";  // debe ser el anterior YA DECODIFICADO
         int nbloques = 0;
 
         cout << "\n=== DECODIFICACIÓN - MÉTODO 1 ===\n";
@@ -313,7 +308,7 @@ void leerachivo(string &datos){
                     else if (bit == '0') ceros++;
                 }
 
-                cout << "Bloque anterior original: " << bloqueAnterior << " | Unos: " << unos << " Ceros: " << ceros << endl;
+                cout << "Bloque anterior decodificado: " << bloqueAnterior << " | Unos: " << unos << " Ceros: " << ceros << endl;
 
                 if (ceros > unos) {
                     bloqueDecodificado = desInvertirPorPares(bloque);
@@ -330,15 +325,17 @@ void leerachivo(string &datos){
             cout << "Bloque decodificado: " << bloqueDecodificado << endl;
 
             resultado += bloqueDecodificado;
-            bloqueAnterior = bloqueDecodificado;  // se usa el original recuperado
+
+            // ✅ Guardamos el bloque ya decodificado (muy importante)
+            bloqueAnterior = bloqueDecodificado;
             nbloques++;
         }
 
         cout << "\n=== BINARIO RECUPERADO ===" << endl;
         cout << resultado << endl;
-
-
+        guardarComoTexto("salida_decodificada1.txt", resultado);
     }
+
 
     string leerBinarioDesdeArchivo(const string& nombreArchivo) {
         ifstream archivo(nombreArchivo, ios::binary);
@@ -358,6 +355,59 @@ void leerachivo(string &datos){
         }
 
         return contenido;
+    }
+
+    string binarioATexto(const string& binario) {
+        string texto = "";
+
+        for (int i = 0; i + 7 < binario.length(); i += 8) {
+            string byte = binario.substr(i, 8);
+            char caracter = static_cast<char>(bitset<8>(byte).to_ulong());
+            texto += caracter;
+        }
+
+        return texto;
+    }
+    void guardarComoTexto(const string& nombreArchivo, const string& binario) {
+        string texto = binarioATexto(binario);
+        ofstream salida(nombreArchivo);
+
+        if (salida.is_open()) {
+            salida << texto;
+            salida.close();
+            cout << "✅ Texto recuperado guardado en: " << nombreArchivo << endl;
+        } else {
+            cout << "❌ No se pudo guardar el archivo de texto." << endl;
+        }
+    }
+
+//decodificar segundo metodo
+
+    // Rotar bits a la izquierda (decodificación del método 2)
+    string rotarIzquierda(const string& bloque) {
+        if (bloque.empty()) return "";
+        return bloque.substr(1) + bloque[0];
+    }
+
+    // Decodificación método 2: desplazamiento circular inverso
+    void DecodificarMetodo2(const string& binarioCodificado, int tamBloque) {
+        cout << "\n=== DECODIFICACIÓN - MÉTODO 2 ===\n" << endl;
+
+        string binarioDecodificado = "";
+
+        for (int i = 0; i < binarioCodificado.length(); i += tamBloque) {
+            string bloque = binarioCodificado.substr(i, tamBloque);
+            string decodificado = rotarIzquierda(bloque);
+
+            cout << "Bloque original codificado: " << bloque << " → Decodificado: " << decodificado << endl;
+
+            binarioDecodificado += decodificado;
+        }
+
+        cout << "\n=== BINARIO RECUPERADO ===\n" << binarioDecodificado << endl;
+
+        // Convertir binario a texto y guardar
+        guardarComoTexto("salida_decodificada2.txt", binarioDecodificado);
     }
 
 /*
