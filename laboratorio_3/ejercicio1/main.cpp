@@ -18,8 +18,32 @@ string InvertirTodos(const string& bloque);
 string InvertirPorPares(const string& bloque);
 string InvertirPorTernas(const string& bloque);
 
+//Funcion segundo metodo
+
+void codificarPorDesplazamiento(const string& binario, int n);
+
+//Funciones para decodificar
+
+string desInvertirTodos(const string& bloque);
+string desInvertirPorPares(const string& bloque);
+string desInvertirPorTernas(const string& bloque);
+void DecodificarMetodo1(const string& binarioCodificado, int n);
+//Funcion para leer el binario
+string leerBinarioDesdeArchivo(const string& nombreArchivo);
+
+
 int main()
 {
+    string archivoEntrada = "ejemplo.txt";
+    string archivoSalida  = "salida.bin";
+    int tamBloque = 4;
+    int metodo = 2;  // o 1
+
+    cout << "Archivo de entrada: " << archivoEntrada << endl;
+    cout << "Archivo de salida: " << archivoSalida << endl;
+    cout << "Tamaño del bloque: " << tamBloque << endl;
+    cout << "Método: " << metodo << endl;
+
     setlocale(LC_ALL, "UTF-8");
     string texto = "ejemplo.txt";
     leerachivo(texto);
@@ -33,6 +57,14 @@ int main()
 
     DividirBloques(bin,cantidadBloques);
 
+    //Segundo metodo
+
+    codificarPorDesplazamiento(bin,4);
+
+    //leer binario
+
+    string binarioCodificado = leerBinarioDesdeArchivo("salida1.bin");
+    DecodificarMetodo1(binarioCodificado, 4);  // o el n original
     return 0;
 
 }
@@ -83,12 +115,12 @@ void leerachivo(string &datos){
             else if(bit=='0')ceros++;
 
         }
-        cout << "Total de unos: " << unos << endl;
-        cout << "Total de ceros: " << ceros << endl;
+        //cout << "Total de unos: " << unos << endl;
+        //cout << "Total de ceros: " << ceros << endl;
 
     }
 
-    // ✅ Invertir todos los bits (sin cambiar orden)
+    // Invertir todos los bits (sin cambiar orden)
     string InvertirTodos(const string& bloque) {
         string resultado = "";
         for (char bit : bloque) {
@@ -97,7 +129,7 @@ void leerachivo(string &datos){
         return resultado;
     }
 
-    // ✅ Invertir solo los bits en posiciones impares (índice 1, 3, 5...)
+    // Invertir solo los bits en posiciones impares (índice 1, 3, 5...)
     string InvertirPorPares(const string& bloque) {
         string resultado = "";
         for (int i = 0; i < bloque.length(); ++i) {
@@ -109,7 +141,7 @@ void leerachivo(string &datos){
         return resultado;
     }
 
-    // ✅ Invertir solo los bits en posiciones múltiplos de 3 (último bit de cada terna)
+    // Invertir solo los bits en posiciones múltiplos de 3 (último bit de cada terna)
     string InvertirPorTernas(const string& bloque) {
         string resultado = "";
         for (int i = 0; i < bloque.length(); ++i) {
@@ -132,31 +164,31 @@ void leerachivo(string &datos){
             string bloqueOriginal = bloque;
             string bloqueCodificado = "";
 
-            cout << "\n=== BLOQUE #" << nbloques + 1 << " ===" << endl;
-            cout << "Bloque original: " << bloque << endl;
+            //cout << "\n=== BLOQUE #" << nbloques + 1 << " ===" << endl;
+            //cout << "Bloque original: " << bloque << endl;
 
             if (i == 0) {
                 bloqueCodificado = InvertirTodos(bloque);
-                cout << "Regla: Primer bloque → Invertir todos los bits" << endl;
+                //cout << "Regla: Primer bloque → Invertir todos los bits" << endl;
             } else {
                 int unos = 0, ceros = 0;
                 ContarBits(bloqueAnterior, unos, ceros);
-                cout << "Bloque anterior: " << bloqueAnterior
-                     << " | Unos: " << unos << " Ceros: " << ceros << endl;
+                //cout << "Bloque anterior: " << bloqueAnterior
+                    // << " | Unos: " << unos << " Ceros: " << ceros << endl;
 
                 if (ceros > unos) {
                     bloqueCodificado = InvertirPorPares(bloque);
-                    cout << "Regla: Más ceros → Invertir bits impares (por pares)" << endl;
+                   // cout << "Regla: Más ceros → Invertir bits impares (por pares)" << endl;
                 } else if (unos > ceros) {
                     bloqueCodificado = InvertirPorTernas(bloque);
-                    cout << "Regla: Más unos → Invertir cada tercer bit (por ternas)" << endl;
+                    //cout << "Regla: Más unos → Invertir cada tercer bit (por ternas)" << endl;
                 } else {
                     bloqueCodificado = InvertirTodos(bloque);
-                    cout << "Regla: Igual cantidad → Invertir todos los bits" << endl;
+                    //cout << "Regla: Igual cantidad → Invertir todos los bits" << endl;
                 }
             }
 
-            cout << "Bloque codificado: " << bloqueCodificado << endl;
+            //cout << "Bloque codificado: " << bloqueCodificado << endl;
             binarioCodificado += bloqueCodificado;
             bloqueAnterior = bloqueOriginal;
             nbloques++;
@@ -164,8 +196,169 @@ void leerachivo(string &datos){
 
         cout << "\n=== RESULTADO FINAL ===" << endl;
         cout << "Cadena binaria codificada completa: " << binarioCodificado << endl;
+        ofstream salida("salida1.bin", ios::binary);
+        if (salida.is_open()) {
+            salida << binarioCodificado;
+            salida.close();
+            cout << "Archivo guardado correctamente en salida.bin" << endl;
+        } else {
+            cout << "No se pudo guardar el archivo." << endl;
+        }
+    }
+//funcion del segundo metodo
+
+    void codificarPorDesplazamiento(const string& binario, int n) {
+        string resultado = "";
+        cout << "\n=== Codificación por desplazamiento circular ===" << endl;
+
+        for (int i = 0; i < binario.length(); i += n) {
+            string bloque = binario.substr(i, n);
+
+            if (bloque.length() < n) {
+                // Si el último bloque es incompleto, se ignora o se puede completar con ceros
+                cout << "Bloque incompleto ignorado: " << bloque << endl;
+                continue;
+            }
+
+            string codificado = bloque.back() + bloque.substr(0, n - 1);
+            resultado += codificado;
+
+            //cout << "Bloque original: " << bloque
+                // << " → Codificado: " << codificado << endl;
+        }
+
+        cout << "\n=== Resultado final codificado ===" << endl;
+        cout << resultado << endl;
+        ofstream salida("salida.bin", ios::binary);
+        if (salida.is_open()) {
+            salida << resultado;
+            salida.close();
+            cout << "Archivo guardado correctamente en salida.bin" << endl;
+        } else {
+            cout << "No se pudo guardar el archivo." << endl;
+        }
     }
 
+
+    //Funciones para decodificar
+
+    string desInvertirTodos(const string& bloque) {
+        string resultado = "";
+        for (char bit : bloque) {
+            resultado += (bit == '0') ? '1' : '0';
+        }
+        return resultado;
+    }
+
+
+    string desInvertirPorPares(const string& bloque) {
+        string invertido = "";
+
+        // Paso 1: invertir bits
+        for (char bit : bloque) {
+            invertido += (bit == '0') ? '1' : '0';
+        }
+
+        // Paso 2: restaurar el orden de pares
+        for (int i = 0; i + 1 < invertido.length(); i += 2) {
+            swap(invertido[i], invertido[i + 1]);
+        }
+
+        return invertido;
+    }
+
+
+
+    string desInvertirPorTernas(const string& bloque) {
+        string invertido = "";
+
+        // 1. Invertimos los bits
+        for (char bit : bloque) {
+            invertido += (bit == '0') ? '1' : '0';
+        }
+
+        string resultado = invertido;
+        int len = resultado.length();
+
+        // 2. Revertimos el orden de las ternas
+        for (int i = 0; i + 2 < len; i += 3) {
+            swap(resultado[i], resultado[i + 2]);
+        }
+
+        return resultado;
+    }
+
+
+    void DecodificarMetodo1(const string& binarioCodificado, int n) {
+        string resultado = "";
+        string bloqueAnterior = "";  // Se usará el bloque ya decodificado
+        int nbloques = 0;
+
+        cout << "\n=== DECODIFICACIÓN - MÉTODO 1 ===\n";
+
+        for (int i = 0; i < binarioCodificado.length(); i += n) {
+            string bloque = binarioCodificado.substr(i, n);
+            string bloqueDecodificado = "";
+
+            cout << "\n--- Bloque #" << nbloques + 1 << " ---" << endl;
+            cout << "Bloque codificado: " << bloque << endl;
+
+            if (nbloques == 0) {
+                bloqueDecodificado = desInvertirTodos(bloque);
+                cout << "Regla: primer bloque → invertir todos los bits" << endl;
+            } else {
+                int unos = 0, ceros = 0;
+                for (char bit : bloqueAnterior) {
+                    if (bit == '1') unos++;
+                    else if (bit == '0') ceros++;
+                }
+
+                cout << "Bloque anterior original: " << bloqueAnterior << " | Unos: " << unos << " Ceros: " << ceros << endl;
+
+                if (ceros > unos) {
+                    bloqueDecodificado = desInvertirPorPares(bloque);
+                    cout << "Regla: más ceros → desinvertir por pares" << endl;
+                } else if (unos > ceros) {
+                    bloqueDecodificado = desInvertirPorTernas(bloque);
+                    cout << "Regla: más unos → desinvertir por ternas" << endl;
+                } else {
+                    bloqueDecodificado = desInvertirTodos(bloque);
+                    cout << "Regla: igual cantidad → desinvertir todos" << endl;
+                }
+            }
+
+            cout << "Bloque decodificado: " << bloqueDecodificado << endl;
+
+            resultado += bloqueDecodificado;
+            bloqueAnterior = bloqueDecodificado;  // se usa el original recuperado
+            nbloques++;
+        }
+
+        cout << "\n=== BINARIO RECUPERADO ===" << endl;
+        cout << resultado << endl;
+
+
+    }
+
+    string leerBinarioDesdeArchivo(const string& nombreArchivo) {
+        ifstream archivo(nombreArchivo, ios::binary);
+        string contenido;
+
+        if (archivo.is_open()) {
+            // Leemos todo el contenido en un solo string
+            string linea;
+            while (getline(archivo, linea)) {
+                contenido += linea;
+            }
+            archivo.close();
+            cout << "Archivo binario leído: " << nombreArchivo << endl;
+            cout << "Contenido del archivo binario:\n" << contenido << endl;
+        } else {
+            cout << "No se pudo abrir el archivo: " << nombreArchivo << endl;
+        }
+
+        return contenido;
+    }
 
 /*
 
