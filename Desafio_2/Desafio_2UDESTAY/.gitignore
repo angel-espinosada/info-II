@@ -1,0 +1,43 @@
+# === Archivos temporales de Qt Creator y del sistema ===
+*.TMP
+*~
+*.autosave
+*.swp
+*.bak
+*.old
+
+# === Archivos de configuración específicos del usuario de Qt Creator ===
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+
+# === Archivos y carpetas generadas por la compilación ===
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+*.log
+
+debug/
+release/
+build-*/
+
+# === Archivos del sistema operativo ===
+.DS_Store
+Thumbs.db
+
+# === Archivos de respaldo de editores ===
+*.sublime-project
+*.sublime-workspace
+*.vscode
+*.code-workspace
+
+# === Archivos intermedios de LaTeX o editores de texto ===
+*.aux
+*.toc
+*.log
+*.pdf

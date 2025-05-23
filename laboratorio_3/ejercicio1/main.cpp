@@ -35,44 +35,62 @@ string leerBinarioDesdeArchivo(const string& nombreArchivo);
 // decodificar segundo metdo
 void DecodificarMetodo2(const string& binarioCodificado, int tamBloque);
 
-int main()
-{
+int main() {
     string archivoEntrada = "ejemplo.txt";
     string archivoSalida  = "salida.bin";
-    int tamBloque = 4;
-    int metodo = 2;  // o 1
-
-    cout << "Archivo de entrada: " << archivoEntrada << endl;
-    cout << "Archivo de salida: " << archivoSalida << endl;
-    cout << "Tamaño del bloque: " << tamBloque << endl;
-    cout << "Método: " << metodo << endl;
+    int tamBloque, metodo, opcion;
 
     setlocale(LC_ALL, "UTF-8");
-    string texto = "ejemplo.txt";
-    leerachivo(texto);
-    MonstrarContenido(texto);
-    //ConvertiraBin(texto);
-    int unos, ceros;
-    string bin = ConvertiraBin(texto);
-    ContarBits(bin,unos,ceros);
 
-    int cantidadBloques = 0;
+    cout << "=== MENU PRINCIPAL ===" << endl;
+    cout << "1. Convertir archivo a binario (texto a bin)" << endl;
+    cout << "2. Codificar binario" << endl;
+    cout << "3. Decodificar archivo binario" << endl;
+    cout << "4. Salir" << endl;
+    cout << "Opcion: ";
+    cin >> opcion;
 
-    DividirBloques(bin,cantidadBloques);
+    if (opcion == 1) {
+        string bin = ConvertiraBin(archivoEntrada);
+        cout << "Binario generado:\n" << bin << endl;
+        ContarBits(bin, tamBloque, metodo);  // temporal uso de vars
 
-    //Segundo metodo
+    } else if (opcion == 2) {
+        cout << "Tamano del bloque: ";
+        cin >> tamBloque;
+        cout << "Metodo (1 o 2): ";
+        cin >> metodo;
 
-    codificarPorDesplazamiento(bin,4);
+        string bin = ConvertiraBin(archivoEntrada);
 
-    //leer binario
+        if (metodo == 1) {
+            DividirBloques(bin, tamBloque);
+        } else if (metodo == 2) {
+            codificarPorDesplazamiento(bin, tamBloque);
+        }
 
-    string binarioCodificado = leerBinarioDesdeArchivo("salida.bin");
+    } else if (opcion == 3) {
+        cout << "Tamano del bloque: ";
+        cin >> tamBloque;
+        cout << "Metodo de decodificacion (1 o 2): ";
+        cin >> metodo;
 
-    //DecodificarMetodo1(binarioCodificado, 4);  // o el n original
-    DecodificarMetodo2(binarioCodificado, 4);
+        string binarioCodificado = leerBinarioDesdeArchivo(archivoSalida);
+
+        if (metodo == 1) {
+            DecodificarMetodo1(binarioCodificado, tamBloque);
+        } else if (metodo == 2) {
+            DecodificarMetodo2(binarioCodificado, tamBloque);
+        }
+
+    } else {
+        cout << "Saliendo..." << endl;
+    }
+
     return 0;
-
 }
+
+
 void leerachivo(string &datos){
    fstream archivo(datos);
     if (!archivo.is_open()) {

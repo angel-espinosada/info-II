@@ -1,0 +1,38 @@
+int main()
+{
+    string archivoEntrada = "ejemplo.txt";
+    string archivoSalida  = "salida.bin";
+    int tamBloque = 4;
+    int metodo = 2;  // o 1
+
+    cout << "Archivo de entrada: " << archivoEntrada << endl;
+    cout << "Archivo de salida: " << archivoSalida << endl;
+    cout << "Tamaño del bloque: " << tamBloque << endl;
+    cout << "Método: " << metodo << endl;
+
+    setlocale(LC_ALL, "UTF-8");
+    string texto = "ejemplo.txt";
+    leerachivo(texto);
+    MonstrarContenido(texto);
+    //ConvertiraBin(texto);
+    int unos, ceros;
+    string bin = ConvertiraBin(texto);
+    ContarBits(bin,unos,ceros);
+
+    int cantidadBloques = 0;
+
+    DividirBloques(bin,cantidadBloques);
+
+    //Segundo metodo
+
+    codificarPorDesplazamiento(bin,4);
+
+    //leer binario
+
+    string binarioCodificado = leerBinarioDesdeArchivo("salida.bin");
+
+    //DecodificarMetodo1(binarioCodificado, 4);  // o el n original
+    DecodificarMetodo2(binarioCodificado, 4);
+    return 0;
+
+}
