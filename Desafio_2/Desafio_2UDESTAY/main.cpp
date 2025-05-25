@@ -1,12 +1,19 @@
 #include <iostream>
-#include "anfitrion.h"
+
 #include <fstream>
 #include <sstream>
 
 
 using namespace std;
 
-bool leerAnfitrionesDesdeArchivo(Anfitrion* &lista, int &cantidad);
+
+bool leerArchivoTexto(const string& nombreArchivo, string* &lineas, int &cantidadLineas);
+bool filtroEliminarAnfitrion(const string& linea);
+bool reescribirArchivoFiltrado(const string& nombreArchivo, bool (*filtro)(const string& linea));
+bool filtroGenerico(const string& linea);
+bool eliminarAnfitrionPorDocumento(const string& documento);
+
+string documentoAEliminar = "";
 
 int main()
 {
@@ -16,28 +23,29 @@ int main()
 
 
 
-    Anfitrion* anfitriones = nullptr;
+    string* lineas = nullptr;
     int cantidad = 0;
 
-    if (leerAnfitrionesDesdeArchivo(anfitriones, cantidad)) {
-        for (int i = 0; i < cantidad; ++i) {
-            cout << "Anfitrión: " << anfitriones[i].getNombre() << " (" << anfitriones[i].getNumeroDocumento() << ")\n";
-            cout << "  Antigüedad: " << anfitriones[i].getAntiguedad() << " meses | Puntuación: " << anfitriones[i].getPuntuacion() << "\n";
-
-            if (anfitriones[i].getCantidadAlojamientos() > 0) {
-                cout << "  Alojamientos: ";
-                for (int j = 0; j < anfitriones[i].getCantidadAlojamientos(); ++j)
-                    cout << anfitriones[i].getAlojamiento(j) << " ";
-                cout << "\n";
-            } else {
-                cout << "  Sin alojamientos.\n";
-            }
-        }
-
-        // liberar memoria
+    if (leerArchivoTexto("anfitriones.txt", lineas, cantidad)) {
+        cout << "\nContenido del archivo anfitriones.txt:\n";
+        for (int i = 0; i < cantidad; ++i)
+            cout << "Línea " << i + 1 << ": " << lineas[i] << endl;
+        delete[] lineas;
+    } else {
+        cout << "Error al leer el archivo.\n";
+    }
 
 
-        delete[] anfitriones;
+
+
+    string doc;
+    cout << "\nIngrese el documento del anfitrión a eliminar: ";
+    cin >> doc;
+
+    if (eliminarAnfitrionPorDocumento(doc)) {
+        cout << "Anfitrión eliminado exitosamente.\n";
+    } else {
+        cout << "No se pudo eliminar el anfitrión.\n";
     }
 
     return 0;
@@ -48,57 +56,70 @@ int main()
 
 }
 
-bool leerAnfitrionesDesdeArchivo(Anfitrion* &lista, int &cantidad) {
-    ifstream in("anfitriones.txt");
+bool leerArchivoTexto(const string& nombreArchivo, string* &lineas, int &cantidadLineas) {
+    ifstream in(nombreArchivo);
     if (!in.is_open()) {
-        cout << "No se encontró el archivo anfitriones.txt\n";
+        cout << "No se pudo abrir el archivo: " << nombreArchivo << endl;
         return false;
     }
 
-    string linea;
-    cantidad = 0;
-    int capacidad = 10;
-    lista = new Anfitrion[capacidad];
+    string temp;
+    int total = 0;
+    while (getline(in, temp)) total++;
+    in.clear();
+    in.seekg(0);
 
-    while (getline(in, linea)) {
-        stringstream ss(linea);
-        string doc, nombre, antiguedadStr, puntuacionStr, alojamientosStr;
+    lineas = new string[total];
+    cantidadLineas = 0;
 
-        getline(ss, doc, '-');
-        getline(ss, nombre, '-');
-        getline(ss, antiguedadStr, '-');
-        getline(ss, puntuacionStr, '-');
-        getline(ss, alojamientosStr);  // puede estar vacío
-
-        if (cantidad >= capacidad) {
-            capacidad *= 2;
-            Anfitrion* nuevaLista = new Anfitrion[capacidad];
-            for (int i = 0; i < cantidad; ++i)
-                nuevaLista[i] = lista[i];
-            delete[] lista;
-            lista = nuevaLista;
-        }
-
-        Anfitrion a(doc, nombre, stoi(antiguedadStr), stof(puntuacionStr));
-
-        if (!alojamientosStr.empty()) {
-            stringstream alojStream(alojamientosStr);
-            string cod;
-            int count = 0;
-            string temp[10];
-
-            while (getline(alojStream, cod, ',')) {
-                temp[count++] = cod;
-            }
-
-            a.setAlojamientos(temp, count);
-        } else {
-            a.setAlojamientos(nullptr, 0);
-        }
-
-        lista[cantidad++] = a;
+    while (getline(in, lineas[cantidadLineas])) {
+        cantidadLineas++;
     }
 
     in.close();
     return true;
 }
+
+bool reescribirArchivoFiltrado(
+    const string& nombreArchivo,
+    bool (*filtro)(const string& linea)
+    ) {
+    string* lineas = nullptr;
+    int cantidad = 0;
+
+    if (!leerArchivoTexto(nombreArchivo, lineas, cantidad)) {
+        return false;
+    }
+
+    ofstream out("temp.txt");
+    if (!out.is_open()) {
+        delete[] lineas;
+        return false;
+    }
+
+    for (int i = 0; i < cantidad; ++i) {
+        if (filtro(lineas[i])) {
+            out << lineas[i] << endl;
+        }
+    }
+
+    out.close();
+    delete[] lineas;
+
+    // Reemplazar archivo original
+    remove(nombreArchivo.c_str());
+    rename("temp.txt", nombreArchivo.c_str());
+
+    return true;
+}
+
+
+bool filtroGenerico(const string& linea) {
+    return linea.substr(0, documentoAEliminar.length()) != documentoAEliminar;
+}
+bool eliminarAnfitrionPorDocumento(const string& documento) {
+    documentoAEliminar = documento;  // guardar el documento deseado
+    return reescribirArchivoFiltrado("anfitriones.txt", filtroGenerico);
+}
+
+

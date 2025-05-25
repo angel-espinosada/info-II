@@ -125,7 +125,7 @@ debug/anfitrion.o: ../../anfitrion.cpp ../../anfitrion.h
 debug/huesped.o: ../../huesped.cpp ../../huesped.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\huesped.o ..\..\huesped.cpp
 
-debug/main.o: ../../main.cpp ../../anfitrion.h
+debug/main.o: ../../main.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\..\main.cpp
 
 debug/reservacion.o: ../../reservacion.cpp ../../reservacion.h

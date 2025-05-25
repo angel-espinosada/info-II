@@ -125,7 +125,7 @@ release/anfitrion.o: ../../anfitrion.cpp ../../anfitrion.h
 release/huesped.o: ../../huesped.cpp ../../huesped.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\huesped.o ..\..\huesped.cpp
 
-release/main.o: ../../main.cpp ../../anfitrion.h
+release/main.o: ../../main.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o ..\..\main.cpp
 
 release/reservacion.o: ../../reservacion.cpp ../../reservacion.h
