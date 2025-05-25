@@ -45,5 +45,12 @@ public:
 
     // Utilidad
     void mostrarInfo();
+
+    // Convierte el objeto a texto para guardar en archivo
+    string toTexto() const;
+
+    // Método estático para cargar anfitriones desde archivo
+    static Anfitrion* cargarDesdeArchivo(const string& nombreArchivo, int& cantidad);
+
 };
 #endif // ANFITRION_H
