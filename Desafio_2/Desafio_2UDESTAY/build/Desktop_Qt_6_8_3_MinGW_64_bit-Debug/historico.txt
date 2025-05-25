@@ -1,0 +1,23 @@
+2025-06-01-CANCELACION_HUESPED-R005-Cancelación por problemas personales del huésped
+2025-06-02-CANCELACION_ANFITRION-R009-Cancelación por mantenimiento del alojamiento
+2025-06-03-CANCELACION_HUESPED-R014-El huésped cambió de fechas
+2025-06-04-CANCELACION_ANFITRION-R021-Sobreventa del alojamiento, se reubicó al huésped
+2025-06-05-CANCELACION_HUESPED-R027-Se solicitó devolución por emergencia familiar
+
+2025-06-10-RESERVA_COMPLETADA-R001-El huésped completó la estadía
+2025-06-11-RESERVA_COMPLETADA-R002-El huésped completó la estadía
+2025-06-12-RESERVA_COMPLETADA-R003-El huésped completó la estadía
+2025-06-13-RESERVA_COMPLETADA-R004-El huésped completó la estadía
+2025-06-14-RESERVA_COMPLETADA-R006-El huésped completó la estadía
+
+2025-06-15-RESERVA_COMPLETADA-R007-El huésped completó la estadía
+2025-06-16-RESERVA_COMPLETADA-R008-El huésped completó la estadía
+2025-06-17-RESERVA_COMPLETADA-R010-El huésped completó la estadía
+2025-06-18-RESERVA_COMPLETADA-R011-El huésped completó la estadía
+2025-06-19-RESERVA_COMPLETADA-R012-El huésped completó la estadía
+
+2025-06-20-CANCELACION_HUESPED-R017-Cancelación por conflicto con fechas laborales
+2025-06-21-CANCELACION_ANFITRION-R023-El anfitrión tuvo problemas con disponibilidad
+2025-06-22-CANCELACION_HUESPED-R030-El huésped encontró otro lugar
+2025-06-23-CANCELACION_ANFITRION-R035-Falla de servicios en el alojamiento
+2025-06-24-RESERVA_COMPLETADA-R015-El huésped completó la estadía

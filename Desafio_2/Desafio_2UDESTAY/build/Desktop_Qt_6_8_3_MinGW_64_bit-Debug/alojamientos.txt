@@ -1,0 +1,10 @@
+UDE001-Casa Verde-Antioquia-Medellín-casa-Cra 10 #12-30-180000-piscina,parqueadero
+UDE002-Apto Azul-Antioquia-Medellín-apartamento-Cll 33 #45-21-220000-WiFi,TV
+UDE003-Cabaña Sol-Cundinamarca-La Calera-cabaña-Vereda Santa Inés-15-200000-fogata,cocina
+UDE004-Apto San Juan-Valle-Cali-apartamento-Cra 100 #45-10-130000-parqueadero
+UDE005-Casa Oasis-Tolima-Ibagué-casa-Cll 7 #18-20-160000-piscina,jardín
+UDE006-Apto Bogotá-Cundinamarca-Bogotá-apartamento-Cll 85 #12-21-200000-WiFi
+UDE007-Cabaña Nube-Santander-San Gil-cabaña-Ruta 45 km 12-10-150000-cocina,hamaca
+UDE008-Casa Blanca-Santander-Barichara-casa-Cll Real #23-25-210000-piscina
+UDE009-Apto Studio-Antioquia-Medellín-apartamento-Cra 43 #8-17-190000-ascensor,TV
+UDE010-Casa Campestre-Cundinamarca-Chía-casa-Cra 5 #2-30-250000-jardín,garaje

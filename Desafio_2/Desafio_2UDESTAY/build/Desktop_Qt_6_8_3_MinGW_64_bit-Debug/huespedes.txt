@@ -1,0 +1,54 @@
+200000001-María Pérez-8-4.7-R001,R020
+200000002-Alejandro Gómez-12-4.5-R002
+200000003-Luisa Fernández-10-4.9-R003,R015
+200000004-Carlos Ruiz-6-4.3-R004
+200000005-Diana Torres-15-4.6-R005
+200000006-Juan Ramírez-4-4.0-R006,R017
+200000007-Sara Moreno-9-4.8-R007
+200000008-Andrés Castro-11-4.4-R008,R018
+200000009-Natalia Mejía-7-4.2-R009
+200000010-Diego Rojas-6-4.1-R010
+
+200000011-Vanessa López-13-4.9-R011,R021
+200000012-Camilo Herrera-5-4.0-R012
+200000013-Paula Ramírez-9-4.5-R013
+200000014-Felipe Vargas-7-3.9-R014
+200000015-Lina Martínez-6-4.6-R016
+200000016-Jorge Torres-8-4.3-R019
+200000017-Laura Salazar-12-4.7-R022
+200000018-Miguel Reyes-10-4.2-R023
+200000019-Daniela Moreno-11-4.5-R024
+200000020-Santiago Peña-5-4.1-R025,R035
+
+200000021-Antonio Díaz-3-3.8-R026
+200000022-Jimena Soto-14-4.6-R027
+200000023-Esteban Garzón-10-4.4-R028
+200000024-Karen Silva-9-4.3-R029
+200000025-Cristian Pineda-6-4.0-R030
+200000026-Lorena Guzmán-7-4.7-R031
+200000027-Óscar Montoya-8-4.2-R032
+200000028-Adriana Ortiz-5-3.9-R033
+200000029-Sebastián Acosta-10-4.8-R034
+200000030-Mónica León-4-4.5-R036
+
+200000031-Ana Rincón-12-4.3
+200000032-Juan Salcedo-7-4.1
+200000033-Helena Páez-5-4.4
+200000034-Leonardo Buitrago-8-4.2
+200000035-Pilar Robledo-10-4.0
+200000036-Julián Navarro-9-4.3
+200000037-Mateo Barrios-6-4.5
+200000038-Tatiana Gallo-3-3.9
+200000039-Ricardo Méndez-11-4.7
+200000040-Daniela Gaitán-7-4.1
+
+200000041-Nicolás Zúñiga-6-4.4
+200000042-Valentina Prieto-8-4.6
+200000043-Ramiro Castaño-5-4.0
+200000044-Lina Cárdenas-9-4.3
+200000045-Héctor Jaramillo-4-3.8
+200000046-Margarita Velásquez-7-4.5
+200000047-Milton Quintero-6-4.2
+200000048-Nataly Bernal-10-4.4
+200000049-Federico Tamayo-8-4.1
+200000050-Sofía Ramírez-12-4.6
