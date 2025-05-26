@@ -12,6 +12,7 @@ private:
     map<string, int> vecinos;  // vecinos directos y sus costos
 
 public:
+    Enrutador();
     //  Constructor
     Enrutador(string nombre);
 
