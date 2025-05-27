@@ -19,6 +19,7 @@ int main()
         cout << "5. Calcular ruta mas corta (Dijkstra)\n";
         cout << "6. Iteraciones y medicion de memoria (simulacion)\n";
         cout << "7. Mostrar Enrutadores\n";
+        cout << "8. Generar red aleatoria\n";
         cout << "9. Guardar red en archivo\n";
         cout << "10. Cargar red desde archivo\n";
         cout << "11. Salir\n";
@@ -78,11 +79,12 @@ int main()
 
         case 8: {
             int cantidad;
-            cout << "¿Cuántos enrutadores quieres generar?: ";
+            cout << "¿Cuantos enrutadores quieres generar?: ";
             cin >> cantidad;
             red.generarRedAleatoria(cantidad);
             break;
         }
+
 
         case 9: {
             string archivo;
@@ -99,11 +101,11 @@ int main()
             break;
         }
         case 11:
-            cout << "¡Hasta luego!\n";
+            cout << "Hasta luego!\n";
             break;
 
         default:
-            cout << "Opción no válida.\n";
+            cout << "Opcion no valida.\n";
         }
 
     } while (opcion != 11);

@@ -232,7 +232,7 @@ void Red::guardarEnArchivo(const string& nombreArchivo) const {
 void Red::cargarDesdeArchivo(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
-        cerr << "❌ No se pudo abrir el archivo para leer.\n";
+        cerr << "No se pudo abrir el archivo para leer.\n";
         return;
     }
 
@@ -243,10 +243,12 @@ void Red::cargarDesdeArchivo(const string& nombreArchivo) {
         agregarEnrutador(origen);
         agregarEnrutador(destino);
         conectarEnrutadores(origen, destino, costo);
+        enrutadores[origen].agregarVecino(destino, costo);
+        enrutadores[destino].agregarVecino(origen, costo);
     }
 
     archivo.close();
-    cout << "✅ Red cargada desde " << nombreArchivo << " exitosamente.\n";
+    cout << "Red cargada desde " << nombreArchivo << " exitosamente.\n";
 }
 
 
