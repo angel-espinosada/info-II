@@ -15,18 +15,27 @@ bool eliminarAnfitrionPorDocumento(const string& documento);
 
 string documentoAEliminar = "";
 
+//Prototipo de funciones para el menu
+// Prototipos del menú
+void menuPrincipal();
+void menuHuesped(const string& doc);
+void menuAnfitrion(const string& doc);
+bool iniciarSesion(const string& documento, const string& rol);
+
+
 int main()
 {
+    menuPrincipal();
 
     //Anfitrion a1("123456789", "Laura Restrepo", 15, 4.8);
    // a1.mostrarInfo();
 
 
-
+/*
     string* lineas = nullptr;
     int cantidad = 0;
 
-    if (leerArchivoTexto("anfitriones.txt", lineas, cantidad)) {
+    if (leerArchivoTexto("huespedes.txt", lineas, cantidad)) {
         cout << "\nContenido del archivo anfitriones.txt:\n";
         for (int i = 0; i < cantidad; ++i)
             cout << "Línea " << i + 1 << ": " << lineas[i] << endl;
@@ -47,7 +56,7 @@ int main()
     } else {
         cout << "No se pudo eliminar el anfitrión.\n";
     }
-
+*/
     return 0;
 
 
@@ -63,17 +72,27 @@ bool leerArchivoTexto(const string& nombreArchivo, string* &lineas, int &cantida
         return false;
     }
 
+    // Primero contamos cuántas líneas hay
     string temp;
     int total = 0;
     while (getline(in, temp)) total++;
+
+    // Volvemos al inicio del archivo para leer de nuevo
     in.clear();
     in.seekg(0);
 
+    // Reservamos memoria dinámica
     lineas = new string[total];
     cantidadLineas = 0;
 
-    while (getline(in, lineas[cantidadLineas])) {
-        cantidadLineas++;
+    // Leemos línea por línea y las guardamos
+    while (getline(in, temp)) {
+        if (cantidadLineas < total) {
+            lineas[cantidadLineas++] = temp;
+        } else {
+            cout << "Advertencia: se leyó más de lo esperado.\n";
+            break;
+        }
     }
 
     in.close();
@@ -122,4 +141,134 @@ bool eliminarAnfitrionPorDocumento(const string& documento) {
     return reescribirArchivoFiltrado("anfitriones.txt", filtroGenerico);
 }
 
+//Funciones del menu
+// Menú principal
+void menuPrincipal() {
+    int opcion;
+    string documento;
+
+    do {
+        cout << "\n=== BIENVENIDO A UDESTAY ===\n";
+        cout << "1. Iniciar sesion como huesped\n";
+        cout << "2. Iniciar sesion como anfitrion\n";
+        cout << "0. Salir\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+        case 1:
+            cout << "Ingrese su numero de documento: ";
+            cin >> documento;
+            if (iniciarSesion(documento, "huesped")) {
+                menuHuesped(documento);
+            } else {
+                cout << "Credenciales invalidas.\n";
+            }
+            break;
+        case 2:
+            cout << "Ingrese su numero de documento: ";
+            cin >> documento;
+            if (iniciarSesion(documento, "anfitrion")) {
+                menuAnfitrion(documento);
+            } else {
+                cout << "Credenciales invalidas.\n";
+            }
+            break;
+        case 0:
+            cout << "Saliendo del sistema.\n";
+            break;
+        default:
+            cout << "Opcion no valida.\n";
+        }
+
+    } while (opcion != 0);
+}
+
+// Menú para huesped
+void menuHuesped(const string& doc) {
+    int opcion;
+    do {
+        cout << "\n=== MENU HUESPED ===\n";
+        cout << "1. Reservar alojamiento\n";
+        cout << "2. Buscar alojamiento por código\n";
+        cout << "3. Anular reservacion\n";
+        cout << "4. Ver mis reservas activas\n";
+        cout << "0. Cerrar sesion\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+        case 1:
+            cout << "TODO: reservarAlojamiento()\n";
+            break;
+        case 2:
+            cout << "TODO: buscarAlojamientoPorCodigo()\n";
+            break;
+        case 3:
+            cout << "TODO: anularReservacion()\n";
+            break;
+        case 4:
+            cout << "TODO: verReservasHuesped()\n";
+            break;
+        case 0:
+            cout << "Sesion cerrada.\n";
+            break;
+        default:
+            cout << "Opcion invalida.\n";
+        }
+    } while (opcion != 0);
+}
+
+// Menú para anfitrión
+void menuAnfitrion(const string& doc) {
+    int opcion;
+    do {
+        cout << "\n=== MENU ANFITRION ===\n";
+        cout << "1. Ver mis reservaciones\n";
+        cout << "2. Anular reservación\n";
+        cout << "3. Actualizar histórico\n";
+        cout << "4. Medición de recursos\n";
+        cout << "0. Cerrar sesion\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+        case 1:
+            cout << "TODO: verReservasAnfitrion()\n";
+            break;
+        case 2:
+            cout << "TODO: anularReservacion()\n";
+            break;
+        case 3:
+            cout << "TODO: actualizarHistorico()\n";
+            break;
+        case 4:
+            cout << "TODO: medirConsumoRecursos()\n";
+            break;
+        case 0:
+            cout << "Sesion cerrada.\n";
+            break;
+        default:
+            cout << "Opcion invalida.\n";
+        }
+    } while (opcion != 0);
+}
+
+// Verifica si existe el documento en el archivo correspondiente
+bool iniciarSesion(const string& documento, const string& rol) {
+    string* lineas = nullptr;
+    int cantidad = 0;
+    string archivo = (rol == "huesped") ? "huespedes.txt" : "anfitriones.txt";
+
+    if (leerArchivoTexto(archivo, lineas, cantidad)) {
+        for (int i = 0; i < cantidad; ++i) {
+            if (lineas[i].substr(0, documento.size()) == documento) {
+                delete[] lineas;
+                return true;
+            }
+        }
+        delete[] lineas;
+    }
+    return false;
+}
 
