@@ -7,6 +7,7 @@
 
 using namespace std;
 string obtenerNombreAnfitrion(const string& documento);
+string obtenerNombreHuesped(const string& documento);
 
 string documentoSesion = "";
 bool leerArchivoTexto(const string& nombreArchivo, string* &lineas, int &cantidadLineas);
@@ -191,6 +192,7 @@ void menuHuesped(const string& doc) {
     int opcion;
     do {
         cout << "\n=== MENU HUESPED ===\n";
+        cout << "Bienvenido, " << obtenerNombreHuesped(documentoSesion) << endl;
         cout << "1. Reservar alojamiento\n";
         cout << "2. Buscar alojamiento por codigo\n";
         cout << "3. Anular reservacion\n";
@@ -243,12 +245,17 @@ void menuAnfitrion(const string& doc) {
             break;
         }
 
-        case 2:
-            cout << "TODO: anularReservacion()\n";
+        case 2: {
+            Reservacion r;
+            r.anularReservacion(doc);
             break;
-        case 3:
-            cout << "TODO: actualizarHistorico()\n";
+        }
+        case 3: {
+            Reservacion r;
+            r.actualizarHistorico();
             break;
+        }
+
         case 4:
             cout << "TODO: medirConsumoRecursos()\n";
             break;
@@ -297,3 +304,20 @@ string obtenerNombreAnfitrion(const string& documento) {
     return "Anfitrión desconocido";
 }
 
+string obtenerNombreHuesped(const string& documento) {
+    string* lineas = nullptr;
+    int cantidad = 0;
+    if (leerArchivoTexto("huespedes.txt", lineas, cantidad)) {
+        for (int i = 0; i < cantidad; ++i) {
+            if (lineas[i].substr(0, documento.length()) == documento) {
+                size_t pos1 = lineas[i].find('-');
+                size_t pos2 = lineas[i].find('-', pos1 + 1);
+                string nombre = lineas[i].substr(pos1 + 1, pos2 - pos1 - 1);
+                delete[] lineas;
+                return nombre;
+            }
+        }
+        delete[] lineas;
+    }
+    return "Anfitrión desconocido";
+}

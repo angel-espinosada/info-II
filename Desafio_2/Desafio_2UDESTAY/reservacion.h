@@ -34,6 +34,11 @@ public:
     string toLineaTexto();
     void verReservacionesAnfitrion(const string& documentoAnfitrion);
 
+    //void anularReservacion();
+    void actualizarHistorico();
+    void anularReservacion(const string& documentoAnfitrion);
+
+
 };
 
 #endif // RESERVACION_H
