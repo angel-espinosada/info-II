@@ -26,7 +26,7 @@ int main()
     string* lineas = nullptr;
     int cantidad = 0;
 
-    if (leerArchivoTexto("anfitriones.txt", lineas, cantidad)) {
+    if (leerArchivoTexto("huespedes.txt", lineas, cantidad)) {
         cout << "\nContenido del archivo anfitriones.txt:\n";
         for (int i = 0; i < cantidad; ++i)
             cout << "Línea " << i + 1 << ": " << lineas[i] << endl;
@@ -36,7 +36,7 @@ int main()
     }
 
 
-
+/*
 
     string doc;
     cout << "\nIngrese el documento del anfitrión a eliminar: ";
@@ -47,7 +47,7 @@ int main()
     } else {
         cout << "No se pudo eliminar el anfitrión.\n";
     }
-
+*/
     return 0;
 
 
@@ -63,22 +63,33 @@ bool leerArchivoTexto(const string& nombreArchivo, string* &lineas, int &cantida
         return false;
     }
 
+    // Primero contamos cuántas líneas hay
     string temp;
     int total = 0;
     while (getline(in, temp)) total++;
+
+    // Volvemos al inicio del archivo para leer de nuevo
     in.clear();
     in.seekg(0);
 
+    // Reservamos memoria dinámica
     lineas = new string[total];
     cantidadLineas = 0;
 
-    while (getline(in, lineas[cantidadLineas])) {
-        cantidadLineas++;
+    // Leemos línea por línea y las guardamos
+    while (getline(in, temp)) {
+        if (cantidadLineas < total) {
+            lineas[cantidadLineas++] = temp;
+        } else {
+            cout << "Advertencia: se leyó más de lo esperado.\n";
+            break;
+        }
     }
 
     in.close();
     return true;
 }
+
 
 bool reescribirArchivoFiltrado(
     const string& nombreArchivo,
