@@ -1,12 +1,14 @@
 #include <iostream>
 #include "anfitrion.h"
+#include<reservacion.h>
 #include <fstream>
 #include <sstream>
 
 
 using namespace std;
+string obtenerNombreAnfitrion(const string& documento);
 
-
+string documentoSesion = "";
 bool leerArchivoTexto(const string& nombreArchivo, string* &lineas, int &cantidadLineas);
 bool filtroEliminarAnfitrion(const string& linea);
 bool reescribirArchivoFiltrado(const string& nombreArchivo, bool (*filtro)(const string& linea));
@@ -190,7 +192,7 @@ void menuHuesped(const string& doc) {
     do {
         cout << "\n=== MENU HUESPED ===\n";
         cout << "1. Reservar alojamiento\n";
-        cout << "2. Buscar alojamiento por código\n";
+        cout << "2. Buscar alojamiento por codigo\n";
         cout << "3. Anular reservacion\n";
         cout << "4. Ver mis reservas activas\n";
         cout << "0. Cerrar sesion\n";
@@ -224,18 +226,23 @@ void menuAnfitrion(const string& doc) {
     int opcion;
     do {
         cout << "\n=== MENU ANFITRION ===\n";
+        cout << "Bienvenido, " << obtenerNombreAnfitrion(documentoSesion) << endl;
+
         cout << "1. Ver mis reservaciones\n";
-        cout << "2. Anular reservación\n";
-        cout << "3. Actualizar histórico\n";
-        cout << "4. Medición de recursos\n";
+        cout << "2. Anular reservacion\n";
+        cout << "3. Actualizar historico\n";
+        cout << "4. Medicion de recursos\n";
         cout << "0. Cerrar sesion\n";
         cout << "Seleccione una opcion: ";
         cin >> opcion;
 
         switch (opcion) {
-        case 1:
-            cout << "TODO: verReservasAnfitrion()\n";
+        case 1: {
+            Reservacion r;
+            r.verReservacionesAnfitrion(documentoSesion);
             break;
+        }
+
         case 2:
             cout << "TODO: anularReservacion()\n";
             break;
@@ -263,6 +270,7 @@ bool iniciarSesion(const string& documento, const string& rol) {
     if (leerArchivoTexto(archivo, lineas, cantidad)) {
         for (int i = 0; i < cantidad; ++i) {
             if (lineas[i].substr(0, documento.size()) == documento) {
+                documentoSesion = documento;
                 delete[] lineas;
                 return true;
             }
@@ -270,5 +278,22 @@ bool iniciarSesion(const string& documento, const string& rol) {
         delete[] lineas;
     }
     return false;
+}
+string obtenerNombreAnfitrion(const string& documento) {
+    string* lineas = nullptr;
+    int cantidad = 0;
+    if (leerArchivoTexto("anfitriones.txt", lineas, cantidad)) {
+        for (int i = 0; i < cantidad; ++i) {
+            if (lineas[i].substr(0, documento.length()) == documento) {
+                size_t pos1 = lineas[i].find('-');
+                size_t pos2 = lineas[i].find('-', pos1 + 1);
+                string nombre = lineas[i].substr(pos1 + 1, pos2 - pos1 - 1);
+                delete[] lineas;
+                return nombre;
+            }
+        }
+        delete[] lineas;
+    }
+    return "Anfitrión desconocido";
 }
 
