@@ -8,6 +8,13 @@ using namespace std;
 
 string quitarEspacios(const string& s);
 
+string limpiarNumero(const string& s) {
+    string limpio;
+    for (char c : s)
+        if (isdigit(c)) limpio += c;
+    return limpio;
+}
+
 // Variable global para usar en el filtro
 static string codigoAEliminar = "";
 
@@ -264,7 +271,7 @@ void Reservacion::anularReservacion(const string& documentoAnfitrion) {
     }
 
     if (!encontrada) {
-        cout << "No se encontró la reserva con codigo '" << codigo << "'.\n";
+        cout << "No se encontro la reserva con codigo '" << codigo << "'.\n";
         delete[] reservas;
         delete[] alojamientos;
         return;
@@ -328,11 +335,12 @@ void Reservacion::actualizarHistorico() {
     ofstream limpiar("temp_historial.txt", ios::trunc);
     limpiar.close();
 
-    cout << "Histórico actualizado correctamente.\n";
+    cout << "Historico actualizado correctamente.\n";
 }
 
 //Funcion para busqueda de alojamiento
-void Reservacion::buscarAlojamientosDisponibles() {
+void Reservacion::buscarAlojamientosDisponibles(const string& documentoSesion)
+{
     string municipio, fechaInicio;
     int noches;
 
@@ -358,7 +366,7 @@ void Reservacion::buscarAlojamientosDisponibles() {
     int cantAnfitriones = 0;
     if (!leerArchivoTexto("anfitriones.txt", anfitriones, cantAnfitriones)) {
         cout << "No se pudo leer anfitriones.txt\n";
-        delete[] alojamientos;
+        delete[] alojamientos; // Liberar alojamientos si falla anfitriones
         return;
     }
 
@@ -366,7 +374,7 @@ void Reservacion::buscarAlojamientosDisponibles() {
     int cantReservas = 0;
     if (!leerArchivoTexto("reservas.txt", reservas, cantReservas)) {
         cout << "No se pudo leer reservas.txt\n";
-        delete[] alojamientos;
+        delete[] alojamientos;  // Liberar si falla reservas
         delete[] anfitriones;
         return;
     }
@@ -376,16 +384,17 @@ void Reservacion::buscarAlojamientosDisponibles() {
 
     for (int i = 0; i < cantAlojamientos; ++i) {
         stringstream ss(alojamientos[i]);
-        string cod, nom, dpto, muni, tipo, dir, cupoStr, precioStr, comodidades;
-        getline(ss, cod, '-');
-        getline(ss, nom, '-');
-        getline(ss, dpto, '-');
-        getline(ss, muni, '-');
-        getline(ss, tipo, '-');
-        getline(ss, dir, '-');
-        getline(ss, cupoStr, '-');
-        getline(ss, precioStr, '-');
-        getline(ss, comodidades);
+        // AQUI: Quitar 'cupoStr' de la declaración si no existe en el TXT
+        string cod, nom, dpto, muni, tipo, dir, precioStr, comodidades;
+
+        getline(ss, cod, '|');
+        getline(ss, nom, '|');
+        getline(ss, dpto, '|');
+        getline(ss, muni, '|');
+        getline(ss, tipo, '|');
+        getline(ss, dir, '|');
+        getline(ss, precioStr, '|'); // Ahora lee el precio
+        getline(ss, comodidades);    // Ahora lee las comodidades
 
         cod = quitarEspacios(cod);
         muni = quitarEspacios(muni);
@@ -394,9 +403,11 @@ void Reservacion::buscarAlojamientosDisponibles() {
 
         if (!estaDisponible(cod, fechaInicio, noches, reservas, cantReservas)) continue;
 
-        cout << "Código: " << cod << " | Nombre: " << nom << endl;
-        cout << "Ubicación: " << muni << ", " << dpto << " | Precio/noche: $" << precioStr << endl;
-        cout << "Tipo: " << tipo << " | Capacidad: " << cupoStr << " personas" << endl;
+        cout << "Codigo: " << cod << " | Nombre: " << nom << endl;
+        cout << "Ubicacion: " << muni << ", " << dpto << " | Precio/noche: $" << precioStr << endl;
+        // Eliminar o ajustar la línea de "Capacidad" si no existe
+        // cout << "Tipo: " << tipo << " | Capacidad: " << cupoStr << " personas" << endl;
+        cout << "Tipo: " << tipo << endl; // Puedes quitar "Capacidad" si ya no está en el TXT
         cout << "Comodidades: " << comodidades << endl;
         cout << "---------------------------\n";
         encontrados++;
@@ -406,11 +417,11 @@ void Reservacion::buscarAlojamientosDisponibles() {
         cout << "No se encontraron alojamientos disponibles en el municipio para las fechas indicadas.\n";
     }
 
-    // 🔄 Aquí es donde podrías agregar los FILTROS si el usuario quiere seguir refinando
-    // ...
-    delete[] alojamientos;
-    delete[] anfitriones;
-    delete[] reservas;
+    // AQUI: ¡MOVER LOS DELETE[] AL FINAL DE LA FUNCION!
+    // delete[] alojamientos;
+    // delete[] anfitriones;
+    // delete[] reservas;
+
 
     if (encontrados == 0) {
         cout << "No se encontraron alojamientos disponibles según los filtros dados.\n";
@@ -421,16 +432,13 @@ void Reservacion::buscarAlojamientosDisponibles() {
 
         if (confirmar == 's' || confirmar == 'S') {
             string codigoAloj;
-            cout << "Ingrese el código del alojamiento a reservar: ";
+            cout << "Ingrese el codigo del alojamiento a reservar: ";
             cin >> codigoAloj;
 
-            string documentoHuesped;
-            cout << "Ingrese su documento de identificación: ";
-            cin >> documentoHuesped;
-
+            string documentoHuesped = documentoSesion;
             // Pedimos método de pago
             string metodoPago;
-            cout << "Método de pago (TCredito/PSE/Efectivo): ";
+            cout << "Metodo de pago (TCredito/PSE/Efectivo): ";
             cin >> metodoPago;
 
             // Obtener fecha de hoy para la reserva
@@ -446,26 +454,59 @@ void Reservacion::buscarAlojamientosDisponibles() {
 
             // Valor total (buscar precio del alojamiento)
             double precioNoche = 0;
+            cout << "DEBUG >> Buscando precio para codigoAloj: [" << codigoAloj << "]" << endl; // Debug
             for (int i = 0; i < cantAlojamientos; ++i) {
                 stringstream ss(alojamientos[i]);
-                string cod, _, __, ___, ____, _____, ______, precioStr;
-                getline(ss, cod, '-');
-                for (int k = 0; k < 6; ++k) getline(ss, _, '-'); // saltar
-                getline(ss, precioStr, '-');
-                if (quitarEspacios(cod) == quitarEspacios(codigoAloj)) {
-                    precioNoche = stod(precioStr);
+                // AQUI: Quitar 'cupoStr' de la declaración si no existe en el TXT
+                string cod, nom, dpto, muni, tipo, dir, precioStr, comodidades;
+
+                getline(ss, cod, '|');
+                getline(ss, nom, '|');
+                getline(ss, dpto, '|');
+                getline(ss, muni, '|');
+                getline(ss, tipo, '|');
+                getline(ss, dir, '|');
+                getline(ss, precioStr, '|'); // ¡Ahora sí lee el precio!
+                getline(ss, comodidades);    // Y esto lee las comodidades
+
+                string codAlojamientoActual = quitarEspacios(cod);
+                string codigoAlojIngresado = quitarEspacios(codigoAloj);
+
+                cout << "DEBUG >> Comparando en bucle de reserva: [" << codAlojamientoActual << "] con [" << codigoAlojIngresado << "]" << endl; // Debug
+
+                if (codAlojamientoActual == codigoAlojIngresado) {
+                    string precioLimpio = quitarEspacios(precioStr); // quitarEspacios también es bueno aquí
+                    cout << "DEBUG >> Alojamiento encontrado para reservar. precioStr (limpio): [" << precioLimpio << "]" << endl; // Debug
+
+                    try {
+                        precioNoche = stod(precioLimpio);
+                        cout << "DEBUG >> Precio por noche convertido exitosamente: $" << precioNoche << endl; // Debug
+                    } catch (const std::invalid_argument& ia) { // Captura específica de errores
+                        cerr << "❌ ERROR: Argumento invalido para stod() - '" << precioLimpio << "'. " << ia.what() << endl;
+                        precioNoche = 0;
+                    } catch (const std::out_of_range& oor) { // Captura específica de errores
+                        cerr << "❌ ERROR: Fuera de rango para stod() - '" << precioLimpio << "'. " << oor.what() << endl;
+                        precioNoche = 0;
+                    } catch (...) { // Captura cualquier otra excepción
+                        cout << "❌ Error al convertir a double (desconocido): [" << precioLimpio << "]\n";
+                        precioNoche = 0;
+                    }
                     break;
                 }
             }
 
+
+            cout << "DEBUG >> Precio final por noche: " << precioNoche << endl; // Nuevo debug
+            cout << "DEBUG >> Noches ingresadas: " << noches << endl;          // Nuevo debug
             double total = precioNoche * noches;
+            cout << "DEBUG >> Total final calculado: $" << total << endl; // Debug más descriptivo
 
             // Generar código de reserva (puedes hacerlo mejor)
             string codigoReserva = "R";
             codigoReserva += to_string(rand() % 900 + 100); // RXXX
 
             // Formato de línea:
-            // codRes-fechaInicio(AAA-MM-DD)-noches-codAloj-docHuesped-metodoPago-fechaReserva-valor
+            // codigoReserva-AñoInicio-MesInicio-DiaInicio-Noches-CodigoAloj-DocumentoHuesped-MetodoPago-AñoReserva-MesReserva-DiaReserva-Total
             ofstream out("reservas.txt", ios::app);
             if (out.is_open()) {
                 out << codigoReserva << "-"
@@ -489,6 +530,11 @@ void Reservacion::buscarAlojamientosDisponibles() {
             }
         }
     }
+
+    // AQUI: LIBERAR LA MEMORIA AL FINAL
+    delete[] alojamientos;
+    delete[] anfitriones;
+    delete[] reservas;
 
 }
 
@@ -619,5 +665,73 @@ void Reservacion::verReservasHuesped(const string& documentoHuesped) {
     }
 
     delete[] lineas;
+}
+
+
+void Reservacion::anularReservacionHuesped(const string& documentoHuesped) {
+    string codigo;
+    cout << "Ingrese el codigo de la reserva que desea anular: ";
+    cin >> codigo;
+
+    string* reservas = nullptr;
+    int totalReservas = 0;
+    if (!leerArchivoTexto("reservas.txt", reservas, totalReservas)) {
+        cout << "No se pudo leer reservas.txt\n";
+        return;
+    }
+
+    int indiceEliminar = -1;
+    for (int i = 0; i < totalReservas; ++i) {
+        stringstream ss(reservas[i]);
+        string codRes, anio, mes, dia, noches, codAloj, docHuesped;
+
+        getline(ss, codRes, '-');
+        getline(ss, anio, '-');
+        getline(ss, mes, '-');
+        getline(ss, dia, '-');
+        getline(ss, noches, '-');
+        getline(ss, codAloj, '-');
+        getline(ss, docHuesped, '-');
+
+        if (quitarEspacios(codRes) == quitarEspacios(codigo) &&
+            quitarEspacios(docHuesped) == quitarEspacios(documentoHuesped)) {
+            indiceEliminar = i;
+            break;
+        }
+    }
+
+    if (indiceEliminar == -1) {
+        cout << "No se encontro una reserva activa con ese codigo para usted.\n";
+        delete[] reservas;
+        return;
+    }
+
+    // Confirmar
+    char confirmar;
+    cout << "¿Esta seguro que desea anular la reserva '" << codigo << "'? (s/n): ";
+    cin >> confirmar;
+    if (confirmar != 's' && confirmar != 'S') {
+        cout << "Operacion cancelada.\n";
+        delete[] reservas;
+        return;
+    }
+
+    // Guardar respaldo
+    ofstream tempHist("temp_historial.txt", ios::app);
+    if (tempHist.is_open()) {
+        tempHist << reservas[indiceEliminar] << endl;
+        tempHist.close();
+    }
+
+    // Reescribir archivo excluyendo esa línea
+    ofstream out("reservas.txt");
+    for (int i = 0; i < totalReservas; ++i) {
+        if (i != indiceEliminar) {
+            out << reservas[i] << endl;
+        }
+    }
+
+    cout << "Reserva anulada exitosamente y respaldada temporalmente.\n";
+    delete[] reservas;
 }
 

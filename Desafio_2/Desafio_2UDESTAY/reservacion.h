@@ -38,8 +38,11 @@ public:
     void actualizarHistorico();
     void anularReservacion(const string& documentoAnfitrion);
 
-    void buscarAlojamientosDisponibles();
+    void buscarAlojamientosDisponibles(const string& documentoSesion);
+
     void verReservasHuesped(const string& documentoHuesped);
+    void anularReservacionHuesped(const string& documentoHuesped);
+
 
 
 
