@@ -34,6 +34,7 @@ public:
     void setPuntuacion(float nuevaPuntuacion);
     void setReservas(string* lista, int cantidad);
 
+
     void mostrarInfo();
 };
 

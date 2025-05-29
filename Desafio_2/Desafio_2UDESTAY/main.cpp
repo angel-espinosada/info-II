@@ -202,18 +202,23 @@ void menuHuesped(const string& doc) {
         cin >> opcion;
 
         switch (opcion) {
-        case 1:
-            cout << "TODO: reservarAlojamiento()\n";
+        case 1: {
+            Reservacion r;
+            r.buscarAlojamientosDisponibles();
             break;
+        }
         case 2:
             cout << "TODO: buscarAlojamientoPorCodigo()\n";
             break;
         case 3:
             cout << "TODO: anularReservacion()\n";
             break;
-        case 4:
-            cout << "TODO: verReservasHuesped()\n";
+        case 4: {
+            Reservacion r;
+            r.verReservasHuesped(documentoSesion);  // documentoSesion = documento actual del huésped
             break;
+        }
+
         case 0:
             cout << "Sesion cerrada.\n";
             break;

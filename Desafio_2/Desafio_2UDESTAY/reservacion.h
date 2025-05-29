@@ -38,7 +38,20 @@ public:
     void actualizarHistorico();
     void anularReservacion(const string& documentoAnfitrion);
 
+    void buscarAlojamientosDisponibles();
+    void verReservasHuesped(const string& documentoHuesped);
+
+
+
+
 
 };
+
+tm fechaA_tm(const string& fecha);
+string tmAFecha(const tm& tiempo);
+string sumarDias(const string& fechaInicio, int dias);
+bool fechasSeSolapan(const string& inicio1, const string& fin1, const string& inicio2, const string& fin2);
+bool estaDisponible(const string& codAlojamiento, const string& fechaInicio, int noches, string* reservas, int cantidadReservas);
+
 
 #endif // RESERVACION_H
