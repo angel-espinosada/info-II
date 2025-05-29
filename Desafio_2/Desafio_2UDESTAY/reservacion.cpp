@@ -482,13 +482,13 @@ void Reservacion::buscarAlojamientosDisponibles(const string& documentoSesion)
                         precioNoche = stod(precioLimpio);
                         cout << "DEBUG >> Precio por noche convertido exitosamente: $" << precioNoche << endl; // Debug
                     } catch (const std::invalid_argument& ia) { // Captura específica de errores
-                        cerr << "❌ ERROR: Argumento invalido para stod() - '" << precioLimpio << "'. " << ia.what() << endl;
+                        cerr << "ERROR: Argumento invalido para stod() - '" << precioLimpio << "'. " << ia.what() << endl;
                         precioNoche = 0;
                     } catch (const std::out_of_range& oor) { // Captura específica de errores
-                        cerr << "❌ ERROR: Fuera de rango para stod() - '" << precioLimpio << "'. " << oor.what() << endl;
+                        cerr << "ERROR: Fuera de rango para stod() - '" << precioLimpio << "'. " << oor.what() << endl;
                         precioNoche = 0;
                     } catch (...) { // Captura cualquier otra excepción
-                        cout << "❌ Error al convertir a double (desconocido): [" << precioLimpio << "]\n";
+                        cout << "Error al convertir a double (desconocido): [" << precioLimpio << "]\n";
                         precioNoche = 0;
                     }
                     break;

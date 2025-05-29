@@ -42,6 +42,7 @@ public:
     void setAntiguedad(int meses);
     void setPuntuacion(float nuevaPuntuacion);
     void setAlojamientos(string* lista, int cantidad);
+    void medirConsumoRecursos();
 
     // Utilidad
     void mostrarInfo();

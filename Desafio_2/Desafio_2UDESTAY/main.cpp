@@ -263,9 +263,12 @@ void menuAnfitrion(const string& doc) {
             break;
         }
 
-        case 4:
-            cout << "TODO: medirConsumoRecursos()\n";
+        case 4:{
+            //Anfitrion a;
+            //a.medirConsumoRecursos();
+            cout<<"No funciono la implementacion.\n";
             break;
+        }
         case 0:
             cout << "Sesion cerrada.\n";
             break;

@@ -186,3 +186,65 @@ Anfitrion* Anfitrion::cargarDesdeArchivo(const string& nombreArchivo, int& canti
     delete[] lineas;
     return lista;
 }
+void medirConsumoRecursos() {
+    string* alojamientos = nullptr;
+    int cantAlojamientos = 0;
+
+    string* anfitriones = nullptr;
+    int cantAnfitriones = 0;
+
+    string* reservas = nullptr;
+    int cantReservas = 0;
+
+    size_t memoriaTotal = 0;
+    int totalIteraciones = 0;
+
+    // Leer archivos
+    if (!leerArchivoTexto("alojamientos.txt", alojamientos, cantAlojamientos)) {
+        cout << "Error leyendo alojamientos.txt\n";
+        return;
+    }
+
+    if (!leerArchivoTexto("anfitriones.txt", anfitriones, cantAnfitriones)) {
+        cout << "Error leyendo anfitriones.txt\n";
+        delete[] alojamientos;
+        return;
+    }
+
+    if (!leerArchivoTexto("reservas.txt", reservas, cantReservas)) {
+        cout << "Error leyendo reservas.txt\n";
+        delete[] alojamientos;
+        delete[] anfitriones;
+        return;
+    }
+
+    // Calcular memoria usada y contar iteraciones
+    for (int i = 0; i < cantAlojamientos; ++i) {
+        memoriaTotal += alojamientos[i].size();
+        totalIteraciones++;
+    }
+
+    for (int i = 0; i < cantAnfitriones; ++i) {
+        memoriaTotal += anfitriones[i].size();
+        totalIteraciones++;
+    }
+
+    for (int i = 0; i < cantReservas; ++i) {
+        memoriaTotal += reservas[i].size();
+        totalIteraciones++;
+    }
+
+    // Resultados
+    cout << "\n=== CONSUMO DE RECURSOS ===\n";
+    cout << "Cantidad de alojamientos: " << cantAlojamientos << endl;
+    cout << "Cantidad de anfitriones: " << cantAnfitriones << endl;
+    cout << "Cantidad de reservas: " << cantReservas << endl;
+    cout << "Iteraciones totales: " << totalIteraciones << endl;
+    cout << "Memoria total estimada: " << memoriaTotal << " bytes ("
+         << memoriaTotal / 1024.0 << " KB)" << endl;
+
+    // Liberar memoria
+    delete[] alojamientos;
+    delete[] anfitriones;
+    delete[] reservas;
+}
